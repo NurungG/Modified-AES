@@ -211,7 +211,7 @@ static void Inverse_MixCols() {
 				)
 			);
 		}
-	}	// 가독성이 오히려 더 떨어지는 것 같습니다 조교님...ㅠ
+	}
 
 	// Push to real field
 	CopyText(ret, Decrypt);
