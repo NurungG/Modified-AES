@@ -1,8 +1,8 @@
 #include "GF.h"
 
 /* Private Variables */
-static uint8_t carry[7];          // 7 elements to be substituted (x^8 ~ x^14)
-                                  // It has maximum degree on (x^7)*(x^7), because there are no addition carries
+static uint8_t carry[7];        // 7 elements to be substituted (x^8 ~ x^14)
+                                // It has maximum degree on (x^7)*(x^7), because there are no addition carries
 
 
 /* Private Functions */
@@ -13,7 +13,9 @@ static void SetCarry() {
 		uint8_t temp = IRR_POLY << i;
 		for (j = 1; j <= i; j++) {
 			// Add carries by substitute operation
-			temp = GF_addition(temp, ((IRR_POLY >> 8 - j) & 0x01) * carry[i - j]);
+			temp = GF_addition(
+				temp, ((IRR_POLY >> 8 - j) & 0x01) * carry[i - j]
+			);
 		}
 		// Write memo
 		carry[i] = temp;
@@ -63,7 +65,9 @@ uint8_t GF_multiplication(uint8_t a, uint8_t b) {
 			ret = GF_addition(ret, a << i);
 			for (j = 1; j <= i; j++) {
 				// And add the appropriate carries
-				ret = GF_addition(ret, ((a >> 8 - j) & 0x01) * carry[i - j]);
+				ret = GF_addition(
+					ret, ((a >> 8 - j) & 0x01) * carry[i - j]
+				);
 			}
 		}
 	}
@@ -78,56 +82,45 @@ uint8_t GF_getAddInverse(uint8_t x) {
 uint8_t GF_getMulInverse(uint8_t d) {
 	// Notes that it's based on Extended Euclidean Algorithm
 	// and subtraction is exactly the same as addition (XOR operation)
-	int amt;                                 // Shift amount
-	int msb;                                 // Boundary for comparing bit position
-	uint8_t r = IRR_POLY;                    // Ramainder
-	uint8_t q = 0x00;                        // Quotient
-	uint8_t p0 = 0x00, p1 = 0x01, p2;        // Euclidean numbers to get multiplication inverse
-	                                         // And parameter d as dividend
-	// If dividend is 0, set inverse as 0
+	int amt;                                // Shift amount
+	int msb;                                // Boundary for comparing bit position
+	uint8_t r = IRR_POLY;                   // Ramainder
+	uint8_t q = 0x00;                       // Quotient
+	uint8_t p0 = 0x00, p1 = 0x01;           // Euclidean numbers to get multiplication inverse
+	                                        // And parameter d as divisor
+	// If divisor is 0, return inverse as 0
 	if (d == 0x00) return 0;
 
 	// Deal with x^8 which is appeared at first round
 	msb = getMsb(d);
 	amt = 8 - msb;
 	
-	// Calculate quotient and remainder for x^8 first
+	// Calculate quotient and remainder for x^8
 	q |= 0x01 << amt;
 	r = GF_addition(r, d << amt);
 
-	// Continue dividing until degree of remainder is below of dividend
-	while (getMsb(r) >= msb) {
-		amt = getMsb(r) - msb;
-		q |= 0x01 << amt;
-		r = GF_addition(r, d << amt);
-	}
-
-	// Set the Euclidean number according to the ignition formula below
-	// p[i] = p[i - 2] - p[i - 1] * q[i - 2]  
-	p2 = GF_addition(p0, GF_multiplication(p1, q));
-
-	// Process remaining rounds (under degree of 7)
-	while (r != 0) {
-		// Swap dividend and remainder
-		swap(&d, &r);
-
-		// Renew before round start
-		p0 = p1;
-		p1 = p2;
-		q = 0;
-
+	// Process remaining rounds until remainder is 0 (under degree of 7)
+	while (1) {
 		// Get boundary
 		msb = getMsb(d);
 		
-		// Divide until degree of remainder is below of dividend
+		// Divide until degree of remainder is below of divisor
 		while (getMsb(r) >= msb) {
 			amt = getMsb(r) - msb;
 			q |= 0x01 << amt;
 			r = GF_addition(r, d << amt);
 		}
 
-		// Set the Euclidean number
-		p2 = GF_addition(p0, GF_multiplication(p1, q));
+		// If remainder is 0, return multiplicative inverse
+		if (r == 0) return p1;
+
+		// Set the Euclidean number according to the ignition formula below
+		// p[i] = p[i - 2] - p[i - 1] * q[i - 2] 
+		p0 = GF_addition(p0, GF_multiplication(p1, q));
+		
+		// Renew before next round start
+		swap(&p0, &p1);
+		swap(&d, &r);
+		q = 0;
 	}
-	return p1;
 }
