@@ -1,8 +1,8 @@
 #include "GF.h"
 
 /* Private Variables */
-static uint8_t carry[7];		// 7 elements to be substituted (x^8 ~ x^14)
-								// It has maximum degree on (x^7)*(x^7), because there are no addition carries
+static uint8_t carry[7];          // 7 elements to be substituted (x^8 ~ x^14)
+                                  // It has maximum degree on (x^7)*(x^7), because there are no addition carries
 
 
 /* Private Functions */
