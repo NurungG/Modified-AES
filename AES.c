@@ -45,7 +45,7 @@ static void CopyKey(uint8_t *src, uint8_t *dst) {
 	}
 }
 
-static int Rfunction(uint8_t *input, int r) {
+static uint32_t Rfunction(uint8_t *input, int r) {
 	uint8_t output[4];
 
 	// Shifted bytes are substituted by the Sbox
@@ -55,7 +55,7 @@ static int Rfunction(uint8_t *input, int r) {
 	output[2] = Sbox[input[3]];
 	output[3] = Sbox[input[0]];
 
-	// Return as int form	
+	// Return as column
 	return *(int *)&output;
 }
 
@@ -331,10 +331,10 @@ void AES_KeyExpansion() {
 		// Round key is seperated 4 columns
 		// Each column is expanded by XORing the column adjacent to the left with the column on same position of previous round
 		// Especially, the first column of each round is XORed with the previous round's last column that passed R-function
-		*(int *)&RoundKey[i][0] = *(int *)&RoundKey[i - 1][0] ^ Rfunction(&RoundKey[i - 1][12], i);
-		*(int *)&RoundKey[i][4] = *(int *)&RoundKey[i - 1][4] ^ *(int *)&RoundKey[i][0];
-		*(int *)&RoundKey[i][8] = *(int *)&RoundKey[i - 1][8] ^ *(int *)&RoundKey[i][4];
-		*(int *)&RoundKey[i][12] = *(int *)&RoundKey[i - 1][12] ^ *(int *)&RoundKey[i][8];
+		*(uint32_t *)&RoundKey[i][0] = *(uint32_t *)&RoundKey[i - 1][0] ^ Rfunction(&RoundKey[i - 1][12], i);
+		*(uint32_t *)&RoundKey[i][4] = *(uint32_t *)&RoundKey[i - 1][4] ^ *(uint32_t *)&RoundKey[i][0];
+		*(uint32_t *)&RoundKey[i][8] = *(uint32_t *)&RoundKey[i - 1][8] ^ *(uint32_t *)&RoundKey[i][4];
+		*(uint32_t *)&RoundKey[i][12] = *(uint32_t *)&RoundKey[i - 1][12] ^ *(uint32_t *)&RoundKey[i][8];
 	}
 
 	// Print expanded Round Keys
