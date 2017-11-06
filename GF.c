@@ -78,14 +78,14 @@ uint8_t GF_getAddInverse(uint8_t x) {
 uint8_t GF_getMulInverse(uint8_t d) {
 	// Notes that it's based on Extended Euclidean Algorithm
 	// and subtraction is exactly the same as addition (XOR operation)
-	int amt;								// Shift amount
-	int msb;								// Boundary for comparing bit position
-	uint8_t r = IRR_POLY;					// Ramainder
-	uint8_t q = 0x00;						// Quotient
-	uint8_t p0 = 0x00, p1 = 0x01, p2;		// Euclidean numbers to get multiplication inverse
-											// And parameter d as dividend
+	int amt;                                 // Shift amount
+	int msb;                                 // Boundary for comparing bit position
+	uint8_t r = IRR_POLY;                    // Ramainder
+	uint8_t q = 0x00;                        // Quotient
+	uint8_t p0 = 0x00, p1 = 0x01, p2;        // Euclidean numbers to get multiplication inverse
+	                                         // And parameter d as dividend
+	// If dividend is 0, set inverse as 0
 	if (d == 0x00) return 0;
-	//else if (d == 0x01) return 1;
 
 	// Deal with x^8 which is appeared at first round
 	msb = getMsb(d);
