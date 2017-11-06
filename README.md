@@ -1,6 +1,6 @@
 ## Modified AES 
-* Irriducible polynomial on GF(2<sup>8</sup>) and Final vector on Affine transformation is different from standard
-* Use irriducible polynomial as x<sup>8</sup>+x<sup>6</sup>+x<sup>3</sup>+x<sup>2</sup>+1
+* Irreducible polynomial on GF(2<sup>8</sup>) and Final vector on Affine transformation is different from standard
+* Use irreducible polynomial as x<sup>8</sup>+x<sup>6</sup>+x<sup>3</sup>+x<sup>2</sup>+1
 * And final vector is 0x15
 * But can be easily adapted by changing ```IRR_POLY``` and ```FINAL_VECTOR```
 
