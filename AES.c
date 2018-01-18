@@ -68,8 +68,8 @@ static void SubstituteBytes() {
 	}
 
 	// Print result
-	printf("SB: ");
-	PrintText(Cipher);
+//	printf("SB: ");
+//	PrintText(Cipher);
 }
 
 static void ShiftRows() {
@@ -98,8 +98,8 @@ static void ShiftRows() {
 	Cipher[7] = temp;
 
 	// Print result
-	printf("SR: ");
-	PrintText(Cipher);
+//	printf("SR: ");
+//	PrintText(Cipher);
 }
 
 static void MixColumns() {
@@ -129,8 +129,8 @@ static void MixColumns() {
 	CopyText(ret, Cipher);
 
 	// Print result
-	printf("MC: ");
-	PrintText(Cipher);
+//	printf("MC: ");
+//	PrintText(Cipher);
 }
 
 static void AddRoundKey(uint8_t *text, int r) {
@@ -142,8 +142,8 @@ static void AddRoundKey(uint8_t *text, int r) {
 	}
 
 	// Print result
-	printf("AR: ");
-	PrintText(text);
+//	printf("AR: ");
+//	PrintText(text);
 }
 
 static void Inverse_SubBytes() {
@@ -237,11 +237,11 @@ void AES_SetRoundConstant() {
 	}
 
 	// Print Round Constants
-	printf("RC: ");
-	for (i = 1; i <= ROUNDS; i++) {
-		printf("%02X ", RoundConstant[i]);
-	}
-	puts("");
+//	printf("RC: ");
+//	for (i = 1; i <= ROUNDS; i++) {
+//		printf("%02X ", RoundConstant[i]);
+//	}
+//	puts("");
 }
 
 void AES_SetSbox() {
@@ -338,12 +338,12 @@ void AES_KeyExpansion() {
 	}
 
 	// Print expanded Round Keys
-	puts("KEY EXPANSION");
-	for (i = 0; i <= ROUNDS; i++) {
-		printf("ROUND %d: ", i);
-		PrintText(RoundKey[i]);
-	}
-	puts("");
+//	puts("KEY EXPANSION");
+//	for (i = 0; i <= ROUNDS; i++) {
+//		printf("ROUND %d: ", i);
+//		PrintText(RoundKey[i]);
+//	}
+//	puts("");
 }
 
 void AES_Encryption() {
@@ -353,26 +353,26 @@ void AES_Encryption() {
 	CopyText(Plain, Cipher);
 
 	// On Round 0, Add Round Key before processing main rounds
-	puts("Round 0");
+//	puts("Round 0");
 	AddRoundKey(Cipher, 0);
-	puts("");
+//	puts("");
 
 	for (i = 1; i < ROUNDS; i++) {
 		// Repeat 4 steps (R1 ~ R9) -> 1.SB 2.SR 3.MC 4.AR
-		printf("Round %d\n", i);
+//		printf("Round %d\n", i);
 		SubstituteBytes();
 		ShiftRows();
 		MixColumns();
 		AddRoundKey(Cipher, i);
-		puts("");
+//		puts("");
 	}
 
 	// On last round, take 3 steps except MC
-	puts("Round 10");
+//	puts("Round 10");
 	SubstituteBytes();
 	ShiftRows();
 	AddRoundKey(Cipher, ROUNDS);
-	puts("");
+//	puts("");
 }
 
 void AES_Decryption() {
